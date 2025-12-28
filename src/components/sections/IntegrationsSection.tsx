@@ -59,12 +59,32 @@ export function IntegrationsSection({ integrations }: IntegrationsSectionProps) 
         setSelectedPopup(popup);
         setSelectedIntegration(integration);
         setIsModalOpen(true);
+        return;
       } else if (popups.length === 0) {
         console.warn('Integration popups not loaded yet or failed to load');
       } else {
         console.warn(`Popup not found for key: ${popupKey}. Available popups:`, popups.map(p => p.popup_key));
       }
     }
+
+    // Fallback: If title is empty or mapping fails, show modal with fallback message
+    // This ensures modal opens even when integration title is empty/NULL after admin edit
+    const fallbackPopup: IntegrationPopup = {
+      id: `fallback-${integration.id}`,
+      popup_key: 'integration_custom' as any,
+      title_en: title || 'Integration Details',
+      title_bg: title || 'Детайли за интеграция',
+      body_en: 'Information about this integration is not available at the moment. Please contact us for more details.',
+      body_bg: 'Информацията за тази интеграция не е налична в момента. Моля, свържете се с нас за повече детайли.',
+      technical_details_en: [],
+      technical_details_bg: [],
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    setSelectedPopup(fallbackPopup);
+    setSelectedIntegration(integration);
+    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -114,8 +134,17 @@ export function IntegrationsSection({ integrations }: IntegrationsSectionProps) 
         <Modal
           isOpen={isModalOpen}
           onClose={closeModal}
-          title={language === 'bg' ? selectedPopup.title_bg : selectedPopup.title_en}
-          body={language === 'bg' ? selectedPopup.body_bg : selectedPopup.body_en}
+          title={
+            (language === 'bg' ? selectedPopup.title_bg : selectedPopup.title_en) ||
+            getLocalizedField(selectedIntegration, 'title', language) ||
+            (language === 'bg' ? 'Детайли за интеграция' : 'Integration Details')
+          }
+          body={
+            (language === 'bg' ? selectedPopup.body_bg : selectedPopup.body_en) ||
+            (language === 'bg'
+              ? 'Информацията за тази интеграция не е налична в момента.'
+              : 'Information about this integration is not available at the moment.')
+          }
           technicalDetails={getLocalizedArray(selectedPopup, 'technical_details', language)}
           technicalDetailsTitle={language === 'bg' ? 'Технически детайли:' : 'Technical details:'}
           icon={getIcon(selectedIntegration.icon_name)}
