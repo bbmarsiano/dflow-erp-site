@@ -59,6 +59,10 @@ export function IntegrationsSection({ integrations }: IntegrationsSectionProps) 
         setSelectedPopup(popup);
         setSelectedIntegration(integration);
         setIsModalOpen(true);
+      } else if (popups.length === 0) {
+        console.warn('Integration popups not loaded yet or failed to load');
+      } else {
+        console.warn(`Popup not found for key: ${popupKey}. Available popups:`, popups.map(p => p.popup_key));
       }
     }
   };

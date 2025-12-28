@@ -67,11 +67,56 @@ WHERE id IS NOT NULL;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM feature_cards LIMIT 1) THEN
-    INSERT INTO feature_cards (title_bg, title_en, description_bg, description_en, icon_name, order_index) VALUES
-    ('Персонализирани Решения', 'Tailored Solutions', 'Всяка ERP система е конфигурирана специално за вашия бизнес модел', 'Every ERP system is configured specifically for your business model', 'Zap', 1),
-    ('Гъвкава Архитектура', 'Flexible Architecture', 'Лесно мащабируеми решения, които растат заедно с вас', 'Easily scalable solutions that grow with you', 'Layers', 2),
-    ('Сигурност и Съответствие', 'Security & Compliance', 'Пълно съответствие с GDPR и индустриални стандарти', 'Full GDPR compliance and industry standards', 'Shield', 3),
-    ('Експертна Поддръжка', 'Expert Support', '24/7 техническа поддръжка и консултации', '24/7 technical support and consultations', 'Users', 4);
+    INSERT INTO feature_cards (
+        title,
+        description,
+        title_bg,
+        title_en,
+        description_bg,
+        description_en,
+        icon_name,
+        order_index
+      ) VALUES
+      (
+        'Персонализирани Решения',
+        'Всяка ERP система е конфигурирана специално за вашия бизнес модел',
+        'Персонализирани Решения',
+        'Tailored Solutions',
+        'Всяка ERP система е конфигурирана специално за вашия бизнес модел',
+        'Every ERP system is configured specifically for your business model',
+        'Zap',
+        1
+      ),
+      (
+        'Гъвкава Архитектура',
+        'Лесно мащабируеми решения, които растат заедно с вас',
+        'Гъвкава Архитектура',
+        'Flexible Architecture',
+        'Лесно мащабируеми решения, които растат заедно с вас',
+        'Easily scalable solutions that grow with you',
+        'Layers',
+        2
+      ),
+      (
+        'Сигурност и Съответствие',
+        'Пълно съответствие с GDPR и индустриални стандарти',
+        'Сигурност и Съответствие',
+        'Security & Compliance',
+        'Пълно съответствие с GDPR и индустриални стандарти',
+        'Full GDPR compliance and industry standards',
+        'Shield',
+        3
+      ),
+      (
+        'Експертна Поддръжка',
+        '24/7 техническа поддръжка и консултации',
+        'Експертна Поддръжка',
+        'Expert Support',
+        '24/7 техническа поддръжка и консултации',
+        '24/7 technical support and consultations',
+        'Users',
+        4
+      );
   END IF;
 END $$;
 
@@ -79,12 +124,60 @@ END $$;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM process_steps LIMIT 1) THEN
-    INSERT INTO process_steps (title_bg, title_en, description_bg, description_en, order_index) VALUES
-    ('Консултация и Анализ', 'Consultation & Analysis', 'Разбираме вашите бизнес процеси и изисквания', 'We understand your business processes and requirements', 1),
-    ('Планиране и Дизайн', 'Planning & Design', 'Създаваме детайлен план за внедряване', 'We create a detailed implementation plan', 2),
-    ('Конфигурация', 'Configuration', 'Персонализираме ERP системата според вашите нужди', 'We customize the ERP system to your needs', 3),
-    ('Тестване', 'Testing', 'Проверяваме всички функционалности', 'We verify all functionalities', 4),
-    ('Обучение и Стартиране', 'Training & Launch', 'Обучаваме екипа ви и стартираме системата', 'We train your team and launch the system', 5);
+    INSERT INTO process_steps (
+      title,
+      description,
+      title_bg,
+      title_en,
+      description_bg,
+      description_en,
+      order_index
+    ) VALUES
+    (
+      'Консултация и Анализ',
+      'Разбираме вашите бизнес процеси и изисквания',
+      'Консултация и Анализ',
+      'Consultation & Analysis',
+      'Разбираме вашите бизнес процеси и изисквания',
+      'We understand your business processes and requirements',
+      1
+    ),
+    (
+      'Планиране и Дизайн',
+      'Създаваме детайлен план за внедряване',
+      'Планиране и Дизайн',
+      'Planning & Design',
+      'Създаваме детайлен план за внедряване',
+      'We create a detailed implementation plan',
+      2
+    ),
+    (
+      'Конфигурация',
+      'Персонализираме ERP системата според вашите нужди',
+      'Конфигурация',
+      'Configuration',
+      'Персонализираме ERP системата според вашите нужди',
+      'We customize the ERP system to your needs',
+      3
+    ),
+    (
+      'Тестване',
+      'Проверяваме всички функционалности',
+      'Тестване',
+      'Testing',
+      'Проверяваме всички функционалности',
+      'We verify all functionalities',
+      4
+    ),
+    (
+      'Обучение и Стартиране',
+      'Обучаваме екипа ви и стартираме системата',
+      'Обучение и Стартиране',
+      'Training & Launch',
+      'Обучаваме екипа ви и стартираме системата',
+      'We train your team and launch the system',
+      5
+    );
   END IF;
 END $$;
 
@@ -92,11 +185,80 @@ END $$;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM packages LIMIT 1) THEN
-    INSERT INTO packages (name_bg, name_en, description_bg, description_en, erp_platform_bg, erp_platform_en, features_bg, features_en, price_text_bg, price_text_en, cta_text_bg, cta_text_en, order_index) VALUES
-    ('Стартър', 'Starter', 'Перфектен за малки фирми', 'Perfect for small businesses', 'Dolibarr', 'Dolibarr', '["Базови модули", "5 потребителя", "Облачен хостинг", "Имейл поддръжка"]'::jsonb, '["Basic modules", "5 users", "Cloud hosting", "Email support"]'::jsonb, 'От €50/месец', 'From €50/month', 'Започнете', 'Get Started', 1),
-    ('Бизнес', 'Business', 'За растящи компании', 'For growing companies', 'Odoo', 'Odoo', '["Разширени модули", "20 потребителя", "Персонализации", "Приоритетна поддръжка"]'::jsonb, '["Advanced modules", "20 users", "Customizations", "Priority support"]'::jsonb, 'От €200/месец', 'From €200/month', 'Започнете', 'Get Started', 2),
-    ('Ентърпрайз', 'Enterprise', 'Пълно ERP решение', 'Complete ERP solution', 'Odoo', 'Odoo', '["Всички модули", "Неограничени потребители", "Пълна персонализация", "24/7 поддръжка"]'::jsonb, '["All modules", "Unlimited users", "Full customization", "24/7 support"]'::jsonb, 'Индивидуална оферта', 'Custom quote', 'Свържете се', 'Contact us', 3),
-    ('On-Premise', 'On-Premise', 'Локално внедряване', 'Local deployment', 'Odoo/Dolibarr', 'Odoo/Dolibarr', '["Собствен сървър", "Пълен контрол", "Максимална сигурност", "Професионална поддръжка"]'::jsonb, '["Own server", "Full control", "Maximum security", "Professional support"]'::jsonb, 'Индивидуална оферта', 'Custom quote', 'Свържете се', 'Contact us', 4);
+    INSERT INTO packages (
+      name,
+      description,
+      erp_platform,
+      price_text,
+      cta_text,
+      name_bg, name_en,
+      description_bg, description_en,
+      erp_platform_bg, erp_platform_en,
+      features_bg, features_en,
+      price_text_bg, price_text_en,
+      cta_text_bg, cta_text_en,
+      order_index
+    ) VALUES
+    (
+      'Стартър',
+      'Перфектен за малки фирми',
+      'Dolibarr',
+      'От €50/месец',
+      'Започнете',
+      'Стартър', 'Starter',
+      'Перфектен за малки фирми', 'Perfect for small businesses',
+      'Dolibarr', 'Dolibarr',
+      '["Базови модули", "5 потребителя", "Облачен хостинг", "Имейл поддръжка"]'::jsonb,
+      '["Basic modules", "5 users", "Cloud hosting", "Email support"]'::jsonb,
+      'От €50/месец', 'From €50/month',
+      'Започнете', 'Get Started',
+      1
+    ),
+    (
+      'Бизнес',
+      'За растящи компании',
+      'Odoo',
+      'От €200/месец',
+      'Започнете',
+      'Бизнес', 'Business',
+      'За растящи компании', 'For growing companies',
+      'Odoo', 'Odoo',
+      '["Разширени модули", "20 потребителя", "Персонализации", "Приоритетна поддръжка"]'::jsonb,
+      '["Advanced modules", "20 users", "Customizations", "Priority support"]'::jsonb,
+      'От €200/месец', 'From €200/month',
+      'Започнете', 'Get Started',
+      2
+    ),
+    (
+      'Ентърпрайз',
+      'Пълно ERP решение',
+      'Odoo',
+      'Индивидуална оферта',
+      'Свържете се',
+      'Ентърпрайз', 'Enterprise',
+      'Пълно ERP решение', 'Complete ERP solution',
+      'Odoo', 'Odoo',
+      '["Всички модули", "Неограничени потребители", "Пълна персонализация", "24/7 поддръжка"]'::jsonb,
+      '["All modules", "Unlimited users", "Full customization", "24/7 support"]'::jsonb,
+      'Индивидуална оферта', 'Custom quote',
+      'Свържете се', 'Contact us',
+      3
+    ),
+    (
+      'On-Premise',
+      'Локално внедряване',
+      'Odoo/Dolibarr',
+      'Индивидуална оферта',
+      'Свържете се',
+      'On-Premise', 'On-Premise',
+      'Локално внедряване', 'Local deployment',
+      'Odoo/Dolibarr', 'Odoo/Dolibarr',
+      '["Собствен сървър", "Пълен контрол", "Максимална сигурност", "Професионална поддръжка"]'::jsonb,
+      '["Own server", "Full control", "Maximum security", "Professional support"]'::jsonb,
+      'Индивидуална оферта', 'Custom quote',
+      'Свържете се', 'Contact us',
+      4
+    );
   END IF;
 END $$;
 
@@ -104,13 +266,13 @@ END $$;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM integrations LIMIT 1) THEN
-    INSERT INTO integrations (title_bg, title_en, icon_name, order_index) VALUES
-    ('Счетоводство', 'Accounting', 'Calculator', 1),
-    ('E-commerce', 'E-commerce', 'ShoppingCart', 2),
-    ('CRM', 'CRM', 'Users', 3),
-    ('Склад', 'Warehouse', 'Package', 4),
-    ('HR', 'HR', 'UserCheck', 5),
-    ('Банкови Услуги', 'Banking', 'CreditCard', 6);
+    INSERT INTO integrations (title, title_bg, title_en, icon_name, order_index) VALUES
+    ('Счетоводство', 'Счетоводство', 'Accounting', 'Calculator', 1),
+    ('E-commerce', 'E-commerce', 'E-commerce', 'ShoppingCart', 2),
+    ('CRM', 'CRM', 'CRM', 'Users', 3),
+    ('Склад', 'Склад', 'Warehouse', 'Package', 4),
+    ('HR', 'HR', 'HR', 'UserCheck', 5),
+    ('Банкови Услуги', 'Банкови Услуги', 'Banking', 'CreditCard', 6);
   END IF;
 END $$;
 
@@ -118,9 +280,9 @@ END $$;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM testimonials LIMIT 1) THEN
-    INSERT INTO testimonials (client_name, company, sector, quote_bg, quote_en, order_index) VALUES
-    ('Иван Петров', 'Tech Solutions Ltd', 'IT Services', 'DFlow ERP трансформира нашите бизнес процеси. Системата е гъвкава и лесна за използване.', 'DFlow ERP transformed our business processes. The system is flexible and easy to use.', 1),
-    ('Мария Георгиева', 'Green Foods', 'Retail', 'Отличен екип и професионално обслужване. Препоръчваме топло!', 'Excellent team and professional service. Highly recommended!', 2),
-    ('Георги Иванов', 'Manufacturing Pro', 'Manufacturing', 'Внедряването беше гладко и екипът винаги е на разположение за помощ.', 'The implementation was smooth and the team is always available for help.', 3);
+    INSERT INTO testimonials (client_name, company, sector, quote, quote_bg, quote_en, order_index) VALUES
+    ('Иван Петров', 'Tech Solutions Ltd', 'IT Services', 'DFlow ERP трансформира нашите бизнес процеси. Системата е гъвкава и лесна за използване.', 'DFlow ERP трансформира нашите бизнес процеси. Системата е гъвкава и лесна за използване.', 'DFlow ERP transformed our business processes. The system is flexible and easy to use.', 1),
+    ('Мария Георгиева', 'Green Foods', 'Retail', 'Отличен екип и професионално обслужване. Препоръчваме топло!', 'Отличен екип и професионално обслужване. Препоръчваме топло!', 'Excellent team and professional service. Highly recommended!', 2),
+    ('Георги Иванов', 'Manufacturing Pro', 'Manufacturing', 'Внедряването беше гладко и екипът винаги е на разположение за помощ.', 'Внедряването беше гладко и екипът винаги е на разположение за помощ.', 'The implementation was smooth and the team is always available for help.', 3);
   END IF;
 END $$;

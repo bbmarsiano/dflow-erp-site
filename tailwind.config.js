@@ -5,4 +5,8 @@ export default {
     extend: {},
   },
   plugins: [],
+  safelist: [
+    'animate-fade-in',
+    'animate-scale-in',
+  ],
 };
