@@ -98,16 +98,16 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex items-center space-x-3 cursor-pointer" onClick={() => scrollToSection('home')}>
             {settings?.logo_url ? (
-              <div className="flex flex-col -space-y-1">
+              <div className="flex flex-col">
                 <img src={settings.logo_url} alt={siteName[language]} className="h-8 w-auto" />
                 {(settings.site_slogan_en || settings.site_slogan_bg) && (
-                  <span className="text-xs text-sky-700 tracking-wide">
+                  <span className="text-xs text-sky-700 tracking-wide mt-2">
                     {language === 'bg' ? settings.site_slogan_bg : settings.site_slogan_en}
                   </span>
                 )}
               </div>
             ) : (
-              <div className="flex flex-col -space-y-0.5">
+              <div className="flex flex-col">
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-teal-500 rounded-lg"></div>
                   <span className={`text-xl font-bold leading-none ${isScrolled ? 'text-gray-900' : 'text-white'}`}>
@@ -115,7 +115,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
                   </span>
                 </div>
                 {(settings?.site_slogan_en || settings?.site_slogan_bg) && (
-                  <span className={`text-xs ml-10 tracking-wide ${isScrolled ? 'text-sky-700' : 'text-sky-200'}`}>
+                  <span className={`text-xs ml-10 tracking-wide mt-2 ${isScrolled ? 'text-sky-700' : 'text-sky-200'}`}>
                     {language === 'bg' ? settings?.site_slogan_bg : settings?.site_slogan_en}
                   </span>
                 )}

@@ -124,60 +124,12 @@ END $$;
 DO $$
 BEGIN
   IF NOT EXISTS (SELECT 1 FROM process_steps LIMIT 1) THEN
-    INSERT INTO process_steps (
-      title,
-      description,
-      title_bg,
-      title_en,
-      description_bg,
-      description_en,
-      order_index
-    ) VALUES
-    (
-      'Консултация и Анализ',
-      'Разбираме вашите бизнес процеси и изисквания',
-      'Консултация и Анализ',
-      'Consultation & Analysis',
-      'Разбираме вашите бизнес процеси и изисквания',
-      'We understand your business processes and requirements',
-      1
-    ),
-    (
-      'Планиране и Дизайн',
-      'Създаваме детайлен план за внедряване',
-      'Планиране и Дизайн',
-      'Planning & Design',
-      'Създаваме детайлен план за внедряване',
-      'We create a detailed implementation plan',
-      2
-    ),
-    (
-      'Конфигурация',
-      'Персонализираме ERP системата според вашите нужди',
-      'Конфигурация',
-      'Configuration',
-      'Персонализираме ERP системата според вашите нужди',
-      'We customize the ERP system to your needs',
-      3
-    ),
-    (
-      'Тестване',
-      'Проверяваме всички функционалности',
-      'Тестване',
-      'Testing',
-      'Проверяваме всички функционалности',
-      'We verify all functionalities',
-      4
-    ),
-    (
-      'Обучение и Стартиране',
-      'Обучаваме екипа ви и стартираме системата',
-      'Обучение и Стартиране',
-      'Training & Launch',
-      'Обучаваме екипа ви и стартираме системата',
-      'We train your team and launch the system',
-      5
-    );
+    INSERT INTO process_steps (title_bg, title_en, description_bg, description_en, order_index) VALUES
+    ('Консултация и Анализ', 'Consultation & Analysis', 'Разбираме вашите бизнес процеси и изисквания', 'We understand your business processes and requirements', 1),
+    ('Планиране и Дизайн', 'Planning & Design', 'Създаваме детайлен план за внедряване', 'We create a detailed implementation plan', 2),
+    ('Конфигурация', 'Configuration', 'Персонализираме ERP системата според вашите нужди', 'We customize the ERP system to your needs', 3),
+    ('Тестване', 'Testing', 'Проверяваме всички функционалности', 'We verify all functionalities', 4),
+    ('Обучение и Стартиране', 'Training & Launch', 'Обучаваме екипа ви и стартираме системата', 'We train your team and launch the system', 5);
   END IF;
 END $$;
 
