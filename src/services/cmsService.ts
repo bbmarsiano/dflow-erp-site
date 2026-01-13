@@ -16,6 +16,7 @@ import type {
   PlatformLogo,
   CustomPage,
   CookieConsentSettings,
+  BlogPost,
 } from '../types/cms';
 
 export const cmsService = {
@@ -231,6 +232,63 @@ export const cmsService = {
       .select('*')
       .eq('is_visible', true)
       .order('display_order', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getBlogPosts(publishedOnly: boolean = true): Promise<BlogPost[]> {
+    let query = supabase
+      .from('blog_posts')
+      .select('*');
+
+    if (publishedOnly) {
+      query = query.eq('is_published', true);
+    }
+
+    const { data, error } = await query
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('slug', slug)
+      .eq('is_published', true)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data;
+  },
+
+  async getBlogPostsForHome(): Promise<BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('is_published', true)
+      .eq('show_on_home', true)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
+      .limit(6);
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async getBlogPostsForFooter(): Promise<BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('is_published', true)
+      .eq('show_in_footer', true)
+      .order('published_at', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
+      .limit(10);
 
     if (error) throw error;
     return data || [];

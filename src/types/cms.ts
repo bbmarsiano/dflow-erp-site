@@ -27,6 +27,49 @@ export interface SiteSettings {
   meta_description_en: string;
   odoo_logo_url: string;
   dolibarr_logo_url: string;
+  logo_scale?: string;
+  accent_color?: string;
+  button_primary_color?: string;
+  button_primary_gradient_from?: string;
+  button_primary_gradient_to?: string;
+  button_primary_gradient_enabled?: string | boolean;
+  button_secondary_color?: string;
+  button_secondary_gradient_from?: string;
+  button_secondary_gradient_to?: string;
+  button_secondary_gradient_enabled?: string | boolean;
+  hero_title_color?: string;
+  hero_subtitle_color?: string;
+  hero_slogan_color?: string;
+  hero_title_font_weight?: string;
+  slogan_color?: string;
+  slogan_font_family?: string;
+  slogan_font_bold?: boolean;
+  slogan_font_italic?: boolean;
+  slogan_font_underline?: boolean;
+  blog_menu_enabled?: string;
+  blog_menu_label_bg?: string;
+  blog_menu_label_en?: string;
+  blog_home_section_enabled?: string;
+  blog_footer_links_enabled?: string;
+  updated_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title_bg: string;
+  title_en: string;
+  excerpt_bg: string;
+  excerpt_en: string;
+  content_bg: string;
+  content_en: string;
+  client_name: string | null;
+  client_industry: string | null;
+  is_published: boolean;
+  show_on_home: boolean;
+  show_in_footer: boolean;
+  published_at: string | null;
+  created_at: string;
   updated_at: string;
 }
 

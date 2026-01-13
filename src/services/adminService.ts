@@ -331,4 +331,79 @@ export const adminService = {
       if (insertError) throw insertError;
     }
   },
+
+  async getAllBlogPosts(): Promise<import('../types/cms').BlogPost[]> {
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  },
+
+  async createBlogPost(data: Omit<import('../types/cms').BlogPost, 'id' | 'created_at' | 'updated_at'>): Promise<void> {
+    // Ensure all required NOT NULL fields are provided
+    const insertData = {
+      slug: data.slug || '',
+      title_bg: data.title_bg || '',
+      title_en: data.title_en || '',
+      excerpt_bg: data.excerpt_bg || '',
+      excerpt_en: data.excerpt_en || '',
+      content_bg: data.content_bg || '',
+      content_en: data.content_en || '',
+      client_name: data.client_name || null,
+      client_industry: data.client_industry || null,
+      is_published: data.is_published ?? false,
+      show_on_home: data.show_on_home ?? false,
+      show_in_footer: data.show_in_footer ?? false,
+      published_at: data.is_published && !data.published_at ? new Date().toISOString() : (data.published_at || null),
+    };
+
+    const { error } = await supabase.from('blog_posts').insert([insertData]);
+
+    if (error) {
+      console.error('Blog post creation error:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      throw error;
+    }
+  },
+
+  async updateBlogPost(id: string, data: Partial<import('../types/cms').BlogPost>): Promise<void> {
+    const updateData: any = { ...data, updated_at: new Date().toISOString() };
+    
+    // Set published_at when publishing for the first time
+    if (data.is_published && !data.published_at) {
+      const { data: existing } = await supabase
+        .from('blog_posts')
+        .select('published_at')
+        .eq('id', id)
+        .single();
+      
+      if (existing && !existing.published_at) {
+        updateData.published_at = new Date().toISOString();
+      }
+    }
+
+    const { error } = await supabase.from('blog_posts').update(updateData).eq('id', id);
+    
+    if (error) {
+      console.error('Blog post update error:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+      });
+      throw error;
+    }
+  },
+
+  async deleteBlogPost(id: string): Promise<void> {
+    const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+    if (error) throw error;
+  },
 };

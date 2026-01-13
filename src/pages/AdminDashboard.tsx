@@ -30,6 +30,8 @@ import { ERPModulesEditor } from '../components/admin/ERPModulesEditor';
 import SubmissionsEditor from '../components/admin/SubmissionsEditor';
 import FooterEditor from '../components/admin/FooterEditor';
 import HeaderEditor from '../components/admin/HeaderEditor';
+import { DesignSettings } from '../components/admin/DesignSettings';
+import { BlogManager } from '../components/admin/BlogManager';
 import type {
   SiteSettings,
   HeroContent,
@@ -52,7 +54,7 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-type Tab = 'general' | 'header' | 'hero' | 'features' | 'why_choose_popups' | 'process' | 'packages' | 'erp_modules' | 'integrations' | 'integration_popups' | 'consulting' | 'testimonials' | 'contact' | 'legal' | 'custom_pages' | 'cookie_consent' | 'submissions' | 'platforms' | 'smtp' | 'footer';
+type Tab = 'general' | 'header' | 'hero' | 'features' | 'why_choose_popups' | 'process' | 'packages' | 'erp_modules' | 'integrations' | 'integration_popups' | 'consulting' | 'testimonials' | 'contact' | 'legal' | 'custom_pages' | 'cookie_consent' | 'submissions' | 'platforms' | 'smtp' | 'footer' | 'design' | 'blog';
 
 export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<Tab>('general');
@@ -266,6 +268,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
 
   const tabs = [
     { id: 'general' as Tab, label: 'General Settings', icon: Settings },
+    { id: 'design' as Tab, label: 'Design & Appearance', icon: Settings },
     { id: 'header' as Tab, label: 'Header', icon: Menu },
     { id: 'hero' as Tab, label: 'Hero Section', icon: Home },
     { id: 'features' as Tab, label: 'Features', icon: Package },
@@ -285,6 +288,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
     { id: 'cookie_consent' as Tab, label: 'Cookie Consent', icon: Settings },
     { id: 'smtp' as Tab, label: 'SMTP & reCAPTCHA', icon: Mail },
     { id: 'submissions' as Tab, label: 'Submissions', icon: Mail, badge: unreadCount },
+    { id: 'blog' as Tab, label: 'Blog / Use Cases', icon: FileText },
   ];
 
   return (
@@ -634,63 +638,126 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-gray-900">Hero Section</h2>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Headline
-                    </label>
-                    <input
-                      type="text"
-                      value={heroContent.headline}
-                      onChange={(e) => setHeroContent({ ...heroContent, headline: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Subheadline
-                    </label>
-                    <textarea
-                      value={heroContent.subheadline}
-                      onChange={(e) => setHeroContent({ ...heroContent, subheadline: e.target.value })}
-                      rows={3}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Slogan
-                    </label>
-                    <input
-                      type="text"
-                      value={heroContent.slogan}
-                      onChange={(e) => setHeroContent({ ...heroContent, slogan: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Headline (Bulgarian)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.headline_bg || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, headline_bg: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Headline (English)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.headline_en || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, headline_en: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Primary CTA Text
+                        Subheadline (Bulgarian)
                       </label>
-                      <input
-                        type="text"
-                        value={heroContent.cta_primary_text}
-                        onChange={(e) => setHeroContent({ ...heroContent, cta_primary_text: e.target.value })}
+                      <textarea
+                        value={heroContent.subheadline_bg || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, subheadline_bg: e.target.value })}
+                        rows={3}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
-
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Secondary CTA Text
+                        Subheadline (English)
+                      </label>
+                      <textarea
+                        value={heroContent.subheadline_en || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, subheadline_en: e.target.value })}
+                        rows={3}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Slogan (Bulgarian)
                       </label>
                       <input
                         type="text"
-                        value={heroContent.cta_secondary_text}
-                        onChange={(e) => setHeroContent({ ...heroContent, cta_secondary_text: e.target.value })}
+                        value={heroContent.slogan_bg || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, slogan_bg: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Slogan (English)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.slogan_en || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, slogan_en: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Primary CTA Text (Bulgarian)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.cta_primary_text_bg || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, cta_primary_text_bg: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Primary CTA Text (English)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.cta_primary_text_en || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, cta_primary_text_en: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Secondary CTA Text (Bulgarian)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.cta_secondary_text_bg || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, cta_secondary_text_bg: e.target.value })}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Secondary CTA Text (English)
+                      </label>
+                      <input
+                        type="text"
+                        value={heroContent.cta_secondary_text_en || ''}
+                        onChange={(e) => setHeroContent({ ...heroContent, cta_secondary_text_en: e.target.value })}
                         className="w-full px-4 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
@@ -1419,7 +1486,15 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <SMTPSettingsEditor />
               )}
 
-              {activeTab !== 'general' && activeTab !== 'hero' && activeTab !== 'contact' && activeTab !== 'legal' && activeTab !== 'submissions' && activeTab !== 'why_choose_popups' && activeTab !== 'integration_popups' && activeTab !== 'features' && activeTab !== 'platforms' && activeTab !== 'process' && activeTab !== 'integrations' && activeTab !== 'consulting' && activeTab !== 'testimonials' && activeTab !== 'packages' && activeTab !== 'erp_modules' && activeTab !== 'custom_pages' && activeTab !== 'cookie_consent' && activeTab !== 'smtp' && (
+              {activeTab === 'design' && (
+                <DesignSettings settings={settings} onUpdate={loadAllContent} />
+              )}
+
+              {activeTab === 'blog' && (
+                <BlogManager settings={settings} onUpdate={loadAllContent} />
+              )}
+
+              {activeTab !== 'general' && activeTab !== 'hero' && activeTab !== 'contact' && activeTab !== 'legal' && activeTab !== 'submissions' && activeTab !== 'why_choose_popups' && activeTab !== 'integration_popups' && activeTab !== 'features' && activeTab !== 'platforms' && activeTab !== 'process' && activeTab !== 'integrations' && activeTab !== 'consulting' && activeTab !== 'testimonials' && activeTab !== 'packages' && activeTab !== 'erp_modules' && activeTab !== 'custom_pages' && activeTab !== 'cookie_consent' && activeTab !== 'smtp' && activeTab !== 'design' && activeTab !== 'blog' && (
                 <div className="text-center text-gray-600 py-12">
                   <p>This section is available for editing.</p>
                   <p className="text-sm mt-2">Use the API to manage {activeTab}.</p>

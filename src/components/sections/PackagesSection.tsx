@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { Check, ArrowRight, Server, Cloud, ExternalLink, Rocket, TrendingUp, Building2 } from 'lucide-react';
-import type { Package } from '../../types/cms';
+import type { Package, SiteSettings } from '../../types/cms';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getLocalizedField, getLocalizedArray } from '../../utils/language';
 import { PackageModal } from '../PackageModal';
+import { getButtonStyle } from '../../utils/buttonStyles';
 
 interface PackagesSectionProps {
   packages: Package[];
+  settings?: SiteSettings | null;
 }
 
-export function PackagesSection({ packages }: PackagesSectionProps) {
+export function PackagesSection({ packages, settings }: PackagesSectionProps) {
   const { language } = useLanguage();
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -175,13 +177,20 @@ export function PackagesSection({ packages }: PackagesSectionProps) {
 
                 <button
                   onClick={scrollToContact}
-                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 group ${
+                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 group hover:opacity-90 ${
                     isFeatured
-                      ? 'bg-white text-blue-600 hover:bg-blue-50'
+                      ? 'text-white'
                       : isOnPremise
-                      ? 'bg-gradient-to-r from-sky-500 to-sky-600 text-white hover:from-sky-600 hover:to-sky-700 shadow-lg hover:shadow-xl'
-                      : 'bg-gradient-to-r from-blue-600 to-teal-600 text-white hover:from-blue-700 hover:to-teal-700'
+                      ? 'bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-600 hover:to-sky-700 shadow-lg hover:shadow-xl text-white'
+                      : 'text-white'
                   }`}
+                  style={
+                    isFeatured
+                      ? getButtonStyle(settings || null, 'primary')
+                      : !isOnPremise
+                      ? getButtonStyle(settings || null, 'primary')
+                      : undefined
+                  }
                 >
                   <span>
                     {isOnPremise && getLocalizedField(pkg, 'cta_label', language)

@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
 import { Send, CheckCircle, AlertCircle } from 'lucide-react';
 import { cmsService } from '../../services/cmsService';
-import type { ContactContent } from '../../types/cms';
+import type { ContactContent, SiteSettings } from '../../types/cms';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getLocalizedField } from '../../utils/language';
 import { MathCaptcha } from '../MathCaptcha';
 import { supabase } from '../../lib/supabase';
+import { getButtonStyle } from '../../utils/buttonStyles';
 
 interface ContactSectionProps {
   content: ContactContent | null;
+  settings?: SiteSettings | null;
 }
 
 declare global {
@@ -22,7 +24,7 @@ declare global {
   }
 }
 
-export function ContactSection({ content }: ContactSectionProps) {
+export function ContactSection({ content, settings }: ContactSectionProps) {
   const { language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
@@ -281,7 +283,8 @@ export function ContactSection({ content }: ContactSectionProps) {
               <button
                 type="submit"
                 disabled={isSubmitting || (captchaMode === 'google' && !recaptchaSiteKey)}
-                className="w-full flex items-center justify-center space-x-2 px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-teal-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="w-full flex items-center justify-center space-x-2 px-8 py-4 text-white rounded-lg font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:opacity-90"
+                style={getButtonStyle(settings || null, 'primary')}
               >
                 <Send size={20} />
                 <span>

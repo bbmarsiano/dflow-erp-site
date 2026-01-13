@@ -4,6 +4,7 @@ import { supabase } from '../lib/supabase';
 import type { SiteSettings } from '../types/cms';
 import { useLanguage } from '../contexts/LanguageContext';
 import { getLocalizedField } from '../utils/language';
+import { getLogoScaleStyle } from '../utils/logoScale';
 
 interface FooterProps {
   settings: SiteSettings | null;
@@ -30,6 +31,7 @@ export function Footer({ settings }: FooterProps) {
   const { language } = useLanguage();
   const [sections, setSections] = useState<FooterSection[]>([]);
   const [links, setLinks] = useState<FooterLink[]>([]);
+  const [blogPosts, setBlogPosts] = useState<any[]>([]);
   const [footerSettings, setFooterSettings] = useState<{
     footer_description_en: string | null;
     footer_description_bg: string | null;
@@ -44,19 +46,23 @@ export function Footer({ settings }: FooterProps) {
 
   useEffect(() => {
     loadFooterContent();
-  }, []);
+  }, [settings]);
 
   const loadFooterContent = async () => {
     try {
-      const [sectionsResult, linksResult, settingsResult] = await Promise.all([
+      const [sectionsResult, linksResult, settingsResult, blogResult] = await Promise.all([
         supabase.from('footer_sections').select('*').order('section_order'),
         supabase.from('footer_links').select('*').order('link_order'),
-        supabase.from('site_settings').select('footer_description_en, footer_description_bg, footer_copyright_en, footer_copyright_bg').single(),
+        supabase.from('site_settings').select('footer_description_en, footer_description_bg, footer_copyright_en, footer_copyright_bg, blog_footer_links_enabled').single(),
+        settings?.blog_footer_links_enabled === 'true'
+          ? supabase.from('blog_posts').select('id, slug, title_bg, title_en').eq('is_published', true).eq('show_in_footer', true).order('published_at', { ascending: false }).limit(10)
+          : Promise.resolve({ data: null, error: null }),
       ]);
 
       if (sectionsResult.data) setSections(sectionsResult.data);
       if (linksResult.data) setLinks(linksResult.data);
       if (settingsResult.data) setFooterSettings(settingsResult.data);
+      if (blogResult.data) setBlogPosts(blogResult.data);
     } catch (error) {
       console.error('Error loading footer content:', error);
     }
@@ -94,12 +100,20 @@ export function Footer({ settings }: FooterProps) {
           <div>
             <div className="flex items-center space-x-2 mb-4">
               {settings?.logo_url ? (
-                <img src={settings.logo_url} alt="DFlow ERP" className="h-8 w-auto" />
+                <div style={getLogoScaleStyle(settings.logo_scale)} className="inline-block">
+                  <img 
+                    src={settings.logo_url} 
+                    alt="DFlow ERP" 
+                    className="h-8 w-auto"
+                  />
+                </div>
               ) : (
-                <>
-                  <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-teal-500 rounded-lg"></div>
-                  <span className="text-xl font-bold text-white">DFlow ERP</span>
-                </>
+                <div style={getLogoScaleStyle(settings?.logo_scale)} className="inline-block">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-teal-500 rounded-lg"></div>
+                    <span className="text-xl font-bold text-white">DFlow ERP</span>
+                  </div>
+                </div>
               )}
             </div>
             <p className="text-sm">{getDescription()}</p>
@@ -157,6 +171,31 @@ export function Footer({ settings }: FooterProps) {
               </div>
             );
           })}
+
+          {settings?.blog_footer_links_enabled === 'true' && blogPosts.length > 0 && (
+            <div>
+              <h3 className="text-white font-semibold mb-4">
+                {settings?.blog_menu_label_bg && settings?.blog_menu_label_en
+                  ? (language === 'bg' ? settings.blog_menu_label_bg : settings.blog_menu_label_en)
+                  : (language === 'bg' ? 'Блог' : 'Blog')}
+              </h3>
+              <div className="space-y-2 text-sm">
+                {blogPosts.map((post) => (
+                  <a
+                    key={post.id}
+                    href={`/blog/${post.slug}`}
+                    className="block hover:text-blue-400 transition-colors"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.location.href = `/blog/${post.slug}`;
+                    }}
+                  >
+                    {language === 'bg' ? post.title_bg : post.title_en}
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">

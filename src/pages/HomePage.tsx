@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type React from 'react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { HeroSection } from '../components/sections/HeroSection';
@@ -10,6 +11,7 @@ import { IntegrationsSection } from '../components/sections/IntegrationsSection'
 import { ConsultingSection } from '../components/sections/ConsultingSection';
 import { TestimonialsSection } from '../components/sections/TestimonialsSection';
 import { ContactSection } from '../components/sections/ContactSection';
+import { BlogSection } from '../components/sections/BlogSection';
 import { cmsService } from '../services/cmsService';
 import type {
   SiteSettings,
@@ -89,6 +91,22 @@ export function HomePage() {
     loadContent();
   }, []);
 
+  // Handle hash navigation after page loads
+  useEffect(() => {
+    if (!isLoading) {
+      const hash = window.location.hash;
+      if (hash) {
+        const sectionId = hash.substring(1); // Remove the #
+        setTimeout(() => {
+          const element = document.getElementById(sectionId);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 100); // Small delay to ensure DOM is ready
+      }
+    }
+  }, [isLoading]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 to-teal-700">
@@ -97,18 +115,27 @@ export function HomePage() {
     );
   }
 
+  // Get accent color from settings with default fallback
+  const accentColor = settings?.accent_color || '#de3c3c';
+
   return (
-    <div className="min-h-screen">
+    <div 
+      className="min-h-screen"
+      style={{
+        '--accent-color': accentColor,
+      } as React.CSSProperties}
+    >
       <Header settings={settings} />
       <main>
         <HeroSection
           content={heroContent}
           bgImageUrl={settings?.hero_bg_image_url}
           bgOpacity={settings?.hero_bg_opacity}
+          settings={settings}
         />
         <FeaturesSection features={features} settings={settings} platforms={platforms} />
         <ProcessSection steps={steps} />
-        <PackagesSection packages={packages} />
+        <PackagesSection packages={packages} settings={settings} />
         {settings?.modules_section_enabled && erpModules.length > 0 && (
           <ERPModulesSection modules={erpModules} />
         )}
@@ -117,7 +144,10 @@ export function HomePage() {
         )}
         <ConsultingSection content={consultingContent} />
         <TestimonialsSection testimonials={testimonials} />
-        <ContactSection content={contactContent} />
+        {settings?.blog_home_section_enabled === 'true' && (
+          <BlogSection settings={settings} />
+        )}
+        <ContactSection content={contactContent} settings={settings} />
       </main>
       <Footer settings={settings} />
     </div>

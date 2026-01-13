@@ -4,6 +4,8 @@ import { LegalPage } from './pages/LegalPage';
 import { CustomPage } from './pages/CustomPage';
 import { AdminLoginPage } from './pages/AdminLoginPage';
 import { AdminDashboard } from './pages/AdminDashboard';
+import { BlogPage } from './pages/BlogPage';
+import { BlogDetailPage } from './pages/BlogDetailPage';
 import { CookieConsent } from './components/CookieConsent';
 import { authService } from './services/authService';
 
@@ -56,6 +58,11 @@ function App() {
       setCurrentPage('cookies');
     } else if (path === '/admin') {
       setCurrentPage('admin');
+    } else if (path === '/blog') {
+      setCurrentPage('blog');
+    } else if (path.startsWith('/blog/')) {
+      setCurrentPage('blog-detail');
+      setCustomPageSlug(path.replace('/blog/', ''));
     } else if (path === '/' || path === '') {
       setCurrentPage('home');
     } else {
@@ -108,6 +115,14 @@ function App() {
 
   if (currentPage === 'cookies') {
     return <LegalPage pageType="cookies" />;
+  }
+
+  if (currentPage === 'blog') {
+    return <BlogPage />;
+  }
+
+  if (currentPage === 'blog-detail') {
+    return <BlogDetailPage slug={customPageSlug} />;
   }
 
   if (currentPage === 'custom') {

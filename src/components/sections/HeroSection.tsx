@@ -1,5 +1,5 @@
 import { ArrowRight, Play } from 'lucide-react';
-import type { HeroContent } from '../../types/cms';
+import type { HeroContent, SiteSettings } from '../../types/cms';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { getLocalizedField } from '../../utils/language';
 
@@ -7,10 +7,29 @@ interface HeroSectionProps {
   content: HeroContent | null;
   bgImageUrl?: string;
   bgOpacity?: number;
+  settings?: SiteSettings | null;
 }
 
-export function HeroSection({ content, bgImageUrl, bgOpacity = 0.25 }: HeroSectionProps) {
+export function HeroSection({ content, bgImageUrl, bgOpacity = 0.25, settings }: HeroSectionProps) {
   const { language } = useLanguage();
+  
+  // Get hero design settings with defaults
+  const heroTitleColor = settings?.hero_title_color || '#ffffff';
+  const heroSubtitleColor = settings?.hero_subtitle_color || '#dbeafe';
+  const heroSloganColor = settings?.hero_slogan_color || '#ffffff';
+  const heroTitleFontWeight = settings?.hero_title_font_weight || 'bold';
+  
+  // Map font weight to Tailwind class
+  const getFontWeightClass = (weight: string) => {
+    switch (weight) {
+      case 'normal': return 'font-normal';
+      case 'medium': return 'font-medium';
+      case 'semibold': return 'font-semibold';
+      case 'bold': return 'font-bold';
+      case 'extrabold': return 'font-extrabold';
+      default: return 'font-bold';
+    }
+  };
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -43,16 +62,25 @@ export function HeroSection({ content, bgImageUrl, bgOpacity = 0.25 }: HeroSecti
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-6 animate-fade-in-up">
-            <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-medium border border-white/20">
+            <span 
+              className="inline-block px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm font-medium border border-white/20"
+              style={{ color: heroSloganColor }}
+            >
               {getLocalizedField(content, 'slogan', language) || (language === 'bg' ? 'ERP, изграден около вашия бизнес' : 'ERP, built around your business')}
             </span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in-up animation-delay-200">
+          <h1 
+            className={`text-4xl sm:text-5xl md:text-6xl lg:text-7xl ${getFontWeightClass(heroTitleFontWeight)} mb-6 animate-fade-in-up animation-delay-200`}
+            style={{ color: heroTitleColor }}
+          >
             {getLocalizedField(content, 'headline', language) || (language === 'bg' ? 'Подобрете вашия работен процес' : 'Enhance your workflow')}
           </h1>
 
-          <p className="text-lg sm:text-xl text-blue-100 mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-400">
+          <p 
+            className="text-lg sm:text-xl mb-10 max-w-2xl mx-auto animate-fade-in-up animation-delay-400"
+            style={{ color: heroSubtitleColor }}
+          >
             {getLocalizedField(content, 'subheadline', language) || (language === 'bg' ? 'DFlow ERP предлага персонализирани ERP решения базирани на Odoo и Dolibarr.' : 'DFlow ERP delivers customized ERP solutions based on Odoo and Dolibarr.')}
           </p>
 
