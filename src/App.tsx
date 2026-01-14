@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { HomePage } from './pages/HomePage';
 import { LegalPage } from './pages/LegalPage';
 import { CustomPage } from './pages/CustomPage';
@@ -10,7 +10,7 @@ import { CookieConsent } from './components/CookieConsent';
 import { authService } from './services/authService';
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'privacy' | 'cookies' | 'admin' | 'custom'>('home');
+  const [currentPage, setCurrentPage] = useState<'home' | 'privacy' | 'cookies' | 'admin' | 'blog' | 'blog-detail' | 'custom'>('home');
   const [customPageSlug, setCustomPageSlug] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -38,9 +38,48 @@ function App() {
     };
   }, []);
 
+  const handleRouting = useCallback((path: string) => {
+    // Normalize path: remove trailing slashes (except root)
+    const normalizedPath = path === '/' ? '/' : path.replace(/\/$/, '');
+    
+    if (normalizedPath === '/privacy') {
+      setCurrentPage('privacy');
+    } else if (normalizedPath === '/cookies') {
+      setCurrentPage('cookies');
+    } else if (normalizedPath === '/admin') {
+      setCurrentPage('admin');
+    } else if (normalizedPath === '/blog') {
+      setCurrentPage('blog');
+      setCustomPageSlug(''); // Clear slug when on blog list
+    } else if (normalizedPath.startsWith('/blog/')) {
+      const slug = normalizedPath.replace('/blog/', '').replace(/\/$/, '');
+      if (slug) {
+        setCurrentPage('blog-detail');
+        setCustomPageSlug(slug);
+      } else {
+        // If /blog/ with no slug, redirect to /blog
+        setCurrentPage('blog');
+        setCustomPageSlug('');
+        window.history.replaceState({}, '', '/blog');
+      }
+    } else if (normalizedPath === '/' || normalizedPath === '') {
+      setCurrentPage('home');
+      setCustomPageSlug('');
+    } else {
+      const slug = normalizedPath.replace(/^\//, '').replace(/\/$/, '');
+      setCustomPageSlug(slug);
+      setCurrentPage('custom');
+    }
+  }, []);
+
   useEffect(() => {
-    const path = window.location.pathname;
-    handleRouting(path);
+    const handleInitialRoute = () => {
+      const path = window.location.pathname;
+      handleRouting(path);
+    };
+
+    // Handle initial route on mount
+    handleInitialRoute();
 
     const handlePopState = () => {
       const path = window.location.pathname;
@@ -49,28 +88,7 @@ function App() {
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const handleRouting = (path: string) => {
-    if (path === '/privacy') {
-      setCurrentPage('privacy');
-    } else if (path === '/cookies') {
-      setCurrentPage('cookies');
-    } else if (path === '/admin') {
-      setCurrentPage('admin');
-    } else if (path === '/blog') {
-      setCurrentPage('blog');
-    } else if (path.startsWith('/blog/')) {
-      setCurrentPage('blog-detail');
-      setCustomPageSlug(path.replace('/blog/', ''));
-    } else if (path === '/' || path === '') {
-      setCurrentPage('home');
-    } else {
-      const slug = path.replace(/^\//, '');
-      setCustomPageSlug(slug);
-      setCurrentPage('custom');
-    }
-  };
+  }, [handleRouting]);
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -88,7 +106,7 @@ function App() {
 
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
-  }, []);
+  }, [handleRouting]);
 
   if (isCheckingAuth) {
     return (
