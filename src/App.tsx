@@ -48,19 +48,19 @@ function App() {
       setCurrentPage('cookies');
     } else if (normalizedPath === '/admin') {
       setCurrentPage('admin');
-    } else if (normalizedPath === '/blog') {
+    } else if (normalizedPath === '/insights') {
       setCurrentPage('blog');
       setCustomPageSlug(''); // Clear slug when on blog list
-    } else if (normalizedPath.startsWith('/blog/')) {
-      const slug = normalizedPath.replace('/blog/', '').replace(/\/$/, '');
+    } else if (normalizedPath.startsWith('/insights/')) {
+      const slug = normalizedPath.replace('/insights/', '').replace(/\/$/, '');
       if (slug) {
         setCurrentPage('blog-detail');
         setCustomPageSlug(slug);
       } else {
-        // If /blog/ with no slug, redirect to /blog
+        // If /insights/ with no slug, redirect to /insights
         setCurrentPage('blog');
         setCustomPageSlug('');
-        window.history.replaceState({}, '', '/blog');
+        window.history.replaceState({}, '', '/insights');
       }
     } else if (normalizedPath === '/' || normalizedPath === '') {
       setCurrentPage('home');

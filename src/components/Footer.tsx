@@ -183,11 +183,11 @@ export function Footer({ settings }: FooterProps) {
                 {blogPosts.map((post) => (
                   <a
                     key={post.id}
-                    href={`/blog/${post.slug}`}
+                    href={`/insights/${post.slug}`}
                     className="block hover:text-blue-400 transition-colors"
                     onClick={(e) => {
                       e.preventDefault();
-                      window.location.href = `/blog/${post.slug}`;
+                      window.location.href = `/insights/${post.slug}`;
                     }}
                   >
                     {language === 'bg' ? post.title_bg : post.title_en}

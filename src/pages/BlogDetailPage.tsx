@@ -79,11 +79,11 @@ export function BlogDetailPage({ slug }: BlogDetailPageProps) {
                 : 'The post you are looking for does not exist or is not published.'}
             </p>
             <a
-              href="/blog"
+              href="/insights"
               className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               onClick={(e) => {
                 e.preventDefault();
-                window.location.href = '/blog';
+                window.location.href = '/insights';
               }}
             >
               {language === 'bg' ? '← Назад към блога' : '← Back to Blog'}
@@ -104,11 +104,11 @@ export function BlogDetailPage({ slug }: BlogDetailPageProps) {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl mx-auto">
               <a
-                href="/blog"
+                href="/insights"
                 className="inline-flex items-center text-blue-200 hover:text-white mb-6 transition-colors"
                 onClick={(e) => {
                   e.preventDefault();
-                  window.location.href = '/blog';
+                  window.location.href = '/insights';
                 }}
               >
                 <span className="mr-2">←</span>

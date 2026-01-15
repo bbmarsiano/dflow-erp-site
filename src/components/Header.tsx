@@ -246,7 +246,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {blogEnabled && hasPublishedPosts && (
               <button
                 onClick={() => {
-                  window.location.href = '/blog';
+                  window.location.href = '/insights';
                   setIsMobileMenuOpen(false);
                 }}
                 className={`text-sm font-medium transition-colors hover:text-blue-600 ${
@@ -297,7 +297,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {blogEnabled && hasPublishedPosts && (
               <button
                 onClick={() => {
-                  window.location.href = '/blog';
+                  window.location.href = '/insights';
                   setIsMobileMenuOpen(false);
                 }}
                 className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md"
