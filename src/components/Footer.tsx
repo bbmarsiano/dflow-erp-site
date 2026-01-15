@@ -183,12 +183,8 @@ export function Footer({ settings }: FooterProps) {
                 {blogPosts.map((post) => (
                   <a
                     key={post.id}
-                    href={`/insights/${post.slug}`}
+                    href={`#/insights/${post.slug}`}
                     className="block hover:text-blue-400 transition-colors"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      window.location.href = `/insights/${post.slug}`;
-                    }}
                   >
                     {language === 'bg' ? post.title_bg : post.title_en}
                   </a>
@@ -202,7 +198,7 @@ export function Footer({ settings }: FooterProps) {
           <p className="text-sm mb-4 md:mb-0">
             {getCopyright()} — {settings?.company_name || 'Balkan Invest Consult'}
             <a
-              href="/admin"
+              href="#/admin"
               className="text-gray-300 hover:text-blue-400 transition-colors"
               aria-label="Admin"
               title="Admin Panel"

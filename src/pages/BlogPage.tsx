@@ -99,12 +99,8 @@ export function BlogPage() {
                       
                       <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                         <a
-                          href={`/insights/${post.slug}`}
+                          href={`#/insights/${post.slug}`}
                           className="hover:text-blue-600 transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            window.location.href = `/insights/${post.slug}`;
-                          }}
                         >
                           {getLocalizedField(post, 'title', language)}
                         </a>
@@ -117,12 +113,8 @@ export function BlogPage() {
                       <div className="flex items-center justify-between text-sm text-gray-500">
                         <span>{formatDate(post.published_at)}</span>
                         <a
-                          href={`/insights/${post.slug}`}
+                          href={`#/insights/${post.slug}`}
                           className="text-blue-600 hover:text-blue-800 font-medium"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            window.location.href = `/insights/${post.slug}`;
-                          }}
                         >
                           {language === 'bg' ? 'Прочети още →' : 'Read more →'}
                         </a>

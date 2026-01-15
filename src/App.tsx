@@ -9,6 +9,24 @@ import { BlogDetailPage } from './pages/BlogDetailPage';
 import { CookieConsent } from './components/CookieConsent';
 import { authService } from './services/authService';
 
+/**
+ * Get the current path from window.location.hash
+ * - If hash starts with #/, treat it as a page route (e.g., #/insights -> /insights)
+ * - If hash is empty or doesn't start with #/, treat as home page (e.g., #contact -> /)
+ */
+function getCurrentPathFromHash(): string {
+  const rawHash = window.location.hash || '';
+
+  if (rawHash.startsWith('#/')) {
+    // Turn "#/insights/proba" into "/insights/proba"
+    return rawHash.slice(1);
+  }
+
+  // For "", "#contact", "#hero" etc. -> treat as home
+  return '/';
+}
+
+
 function App() {
   const [currentPage, setCurrentPage] = useState<'home' | 'privacy' | 'cookies' | 'admin' | 'blog' | 'blog-detail' | 'custom'>('home');
   const [customPageSlug, setCustomPageSlug] = useState<string>('');
@@ -38,7 +56,8 @@ function App() {
     };
   }, []);
 
-  const handleRouting = useCallback((path: string) => {
+  const handleRouting = useCallback(() => {
+    const path = getCurrentPathFromHash();
     // Normalize path: remove trailing slashes (except root)
     const normalizedPath = path === '/' ? '/' : path.replace(/\/$/, '');
     
@@ -60,7 +79,7 @@ function App() {
         // If /insights/ with no slug, redirect to /insights
         setCurrentPage('blog');
         setCustomPageSlug('');
-        window.history.replaceState({}, '', '/insights');
+        window.location.hash = '#/insights';
       }
     } else if (normalizedPath === '/' || normalizedPath === '') {
       setCurrentPage('home');
@@ -73,21 +92,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const handleInitialRoute = () => {
-      const path = window.location.pathname;
-      handleRouting(path);
-    };
-
     // Handle initial route on mount
-    handleInitialRoute();
+    handleRouting();
 
-    const handlePopState = () => {
-      const path = window.location.pathname;
-      handleRouting(path);
+    const onHashChange = () => {
+      handleRouting();
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', onHashChange);
+    return () => {
+      window.removeEventListener('hashchange', onHashChange);
+    };
   }, [handleRouting]);
 
   useEffect(() => {
@@ -95,18 +110,28 @@ function App() {
       const target = e.target as HTMLElement;
       const link = target.closest('a');
 
-      if (link && link.href.startsWith(window.location.origin)) {
+      if (link && link.hash) {
+        // Handle hash links
+        // For page routes (#/...), hashchange event will trigger handleRouting
+        // For section anchors (#contact, #hero), let browser handle normally
+        // No need to prevent default - browser will handle hash navigation
+      } else if (link && link.href.startsWith(window.location.origin) && !link.hash) {
+        // Handle non-hash links (legacy paths - convert to hash routes)
         e.preventDefault();
         const path = link.pathname;
-        window.history.pushState({}, '', path);
-        handleRouting(path);
+        if (path !== '/') {
+          // Convert path to hash route
+          window.location.hash = path;
+        } else {
+          window.location.hash = '';
+        }
         window.scrollTo(0, 0);
       }
     };
 
     document.addEventListener('click', handleClick);
     return () => document.removeEventListener('click', handleClick);
-  }, [handleRouting]);
+  }, []);
 
   if (isCheckingAuth) {
     return (
@@ -123,7 +148,7 @@ function App() {
     return <AdminDashboard onLogout={() => {
       setIsAuthenticated(false);
       setCurrentPage('home');
-      window.history.pushState({}, '', '/');
+      window.location.hash = '';
     }} />;
   }
 

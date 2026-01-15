@@ -64,7 +64,7 @@ export function CookieConsent() {
                 <p className="text-sm text-gray-600 leading-relaxed">
                   {message}{' '}
                   <a
-                    href="/cookies"
+                    href="#/cookies"
                     className="text-blue-600 hover:text-blue-700 underline"
                   >
                     {learnMoreText}

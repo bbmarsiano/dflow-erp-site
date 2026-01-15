@@ -79,12 +79,8 @@ export function BlogSection({ settings }: BlogSectionProps) {
 
                   <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                     <a
-                      href={`/insights/${post.slug}`}
+                      href={`#/insights/${post.slug}`}
                       className="hover:text-blue-600 transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.location.href = `/insights/${post.slug}`;
-                      }}
                     >
                       {getLocalizedField(post, 'title', language)}
                     </a>
@@ -97,12 +93,8 @@ export function BlogSection({ settings }: BlogSectionProps) {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-500">{formatDate(post.published_at)}</span>
                     <a
-                      href={`/insights/${post.slug}`}
+                      href={`#/insights/${post.slug}`}
                       className="text-blue-600 hover:text-blue-800 font-medium"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.location.href = `/insights/${post.slug}`;
-                      }}
                     >
                       {language === 'bg' ? 'Прочети още →' : 'Read more →'}
                     </a>
@@ -114,12 +106,8 @@ export function BlogSection({ settings }: BlogSectionProps) {
 
           <div className="text-center mt-12">
             <a
-              href="/insights"
+              href="#/insights"
               className="inline-block px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              onClick={(e) => {
-                e.preventDefault();
-                window.location.href = '/insights';
-              }}
             >
               {language === 'bg' ? 'Виж всички статии' : 'View All Posts'}
             </a>

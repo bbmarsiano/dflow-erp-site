@@ -52,7 +52,7 @@ export function LegalPage({ pageType }: LegalPageProps) {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl mx-auto">
             <a
-              href="/"
+              href="#/"
               className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-700 mb-8"
             >
               <ArrowLeft className="w-5 h-5" />

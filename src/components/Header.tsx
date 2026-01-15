@@ -5,6 +5,7 @@ import type { SiteSettings } from '../types/cms';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { getLogoScaleStyle } from '../utils/logoScale';
+import { navigateToPage } from '../utils/navigation';
 
 function getSloganFontFamily(setting: string | null | undefined): string {
   switch (setting) {
@@ -124,8 +125,9 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
   };
 
   const scrollToSection = (sectionId: string) => {
-    // Check if we're on the homepage
-    const isOnHomepage = window.location.pathname === '/';
+    // Check if we're on the homepage (hash is empty or doesn't start with #/)
+    const hash = window.location.hash || '';
+    const isOnHomepage = !hash.startsWith('#/');
     
     if (isOnHomepage) {
       // If on homepage, scroll to section
@@ -135,19 +137,27 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
         setIsMobileMenuOpen(false);
       }
     } else {
-      // If on another page, navigate to homepage with hash
-      window.location.href = `/#${sectionId}`;
+      // If on another page, navigate to homepage with section hash
+      window.location.hash = `#${sectionId}`;
       setIsMobileMenuOpen(false);
+      // Scroll will happen after hash change
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     }
   };
 
-  const navigateToPage = (slug: string) => {
-    window.location.href = `/${slug}`;
+  const navigateToCustomPage = (slug: string) => {
+    navigateToPage(`/${slug}`);
     setIsMobileMenuOpen(false);
   };
 
   const navigateToHome = () => {
-    window.location.href = '/';
+    window.location.hash = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -235,7 +245,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {customPages.map((page) => (
               <button
                 key={page.id}
-                onClick={() => navigateToPage(page.slug)}
+                onClick={() => navigateToCustomPage(page.slug)}
                 className={`text-sm font-medium transition-colors hover:text-blue-600 ${
                   isScrolled ? 'text-gray-700' : 'text-white'
                 }`}
@@ -246,7 +256,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {blogEnabled && hasPublishedPosts && (
               <button
                 onClick={() => {
-                  window.location.href = '/insights';
+                  navigateToPage('/insights');
                   setIsMobileMenuOpen(false);
                 }}
                 className={`text-sm font-medium transition-colors hover:text-blue-600 ${
@@ -288,7 +298,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {customPages.map((page) => (
               <button
                 key={page.id}
-                onClick={() => navigateToPage(page.slug)}
+                onClick={() => navigateToCustomPage(page.slug)}
                 className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md"
               >
                 {language === 'bg' ? page.title_bg : page.title_en}
@@ -297,7 +307,7 @@ export function Header({ settings, isCustomPage = false }: HeaderProps) {
             {blogEnabled && hasPublishedPosts && (
               <button
                 onClick={() => {
-                  window.location.href = '/insights';
+                  navigateToPage('/insights');
                   setIsMobileMenuOpen(false);
                 }}
                 className="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 rounded-md"

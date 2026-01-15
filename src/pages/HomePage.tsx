@@ -91,11 +91,12 @@ export function HomePage() {
     loadContent();
   }, []);
 
-  // Handle hash navigation after page loads
+  // Handle hash navigation after page loads (only for section anchors, not page routes)
   useEffect(() => {
     if (!isLoading) {
       const hash = window.location.hash;
-      if (hash) {
+      // Only handle section anchors (#contact, #hero), not page routes (#/insights)
+      if (hash && !hash.startsWith('#/')) {
         const sectionId = hash.substring(1); // Remove the #
         setTimeout(() => {
           const element = document.getElementById(sectionId);
